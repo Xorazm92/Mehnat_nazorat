@@ -13,11 +13,18 @@ import { ManageUsersActions } from './update/actions/manage-users-actions';
 import { AdminMenuActions } from './update/actions/menu-actions';
 import { ManageAppealsActions } from './update/actions/manage-appeals-actions';
 import { ManageDepartmentsActions } from './update/actions/manage-departments-sctions';
+import { CoreModule } from 'src/core/core.module';
+import { AnnualPlanApprovalScene } from './update/scenes/annual-plan-approval.scene';
+import { ComplianceChecklistScene } from './update/scenes/compliance-checklist.scene';
+import { InventoryManagementScene } from './update/scenes/inventory-management.scene';
+import { MonthlyPlanApprovalScene } from './update/scenes/monthly-plan-approval.scene';
+import { AdminPlanActions } from './update/actions/plan-actions';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Department, User, Appeals]),
     ButtonsModule,
+    CoreModule,
   ],
   providers: [
     AdminCommands,
@@ -30,6 +37,11 @@ import { ManageDepartmentsActions } from './update/actions/manage-departments-sc
     ManageDepartmentsActions,
     ManageUsersActions,
     AdminMenuActions,
+    AnnualPlanApprovalScene,
+    ComplianceChecklistScene,
+    InventoryManagementScene,
+    MonthlyPlanApprovalScene,
+    AdminPlanActions,
   ],
 })
 export class AdminModule {}
