@@ -1,26 +1,57 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { ConfigService } from '@nestjs/config';
+import * as Joi from 'joi';
 
-export type ConfigType = {
-  PORT: number;
-  BOT_TOKEN: string;
-  DB_TYPE: string;
-  DB_USER: string;
-  DB_PASSWORD: string;
-  DB_HOST: string;
-  DB_PORT: number;
-  DB_BAZE: string;
-  ADMIN_ID: string;
-};
+export const configuration = () => ({
+  app: {
+    port: parseInt(process.env.PORT ?? '3000', 10),
+  },
+  bot: {
+    token: process.env.BOT_TOKEN ?? '',
+    adminId: process.env.ADMIN_ID ?? '',
+  },
+  security: {
+    apiKey: process.env.API_KEY ?? '',
+  },
+  database: {
+    type: process.env.DB_TYPE ?? 'sqlite',
+    host: process.env.DB_HOST ?? 'localhost',
+    port: parseInt(process.env.DB_PORT ?? '5432', 10),
+    user: process.env.DB_USER ?? '',
+    password: process.env.DB_PASSWORD ?? '',
+    name: process.env.DB_BAZE ?? '',
+  },
+});
 
-export const config: ConfigType = {
-  PORT: Number(process.env.PORT) as number,
-  BOT_TOKEN: process.env.BOT_TOKEN,
-  DB_TYPE: process.env.DB_TYPE,
-  DB_USER: process.env.DB_USER,
-  DB_PASSWORD: process.env.DB_PASSWORD,
-  DB_HOST: process.env.DB_HOST,
-  DB_PORT: Number(process.env.DB_PORT),
-  DB_BAZE: process.env.DB_BAZE,
-  ADMIN_ID: process.env.ADMIN_ID,
-};
+export const validationSchema = Joi.object({
+  PORT: Joi.number().default(3000),
+  BOT_TOKEN: Joi.string().required(),
+  ADMIN_ID: Joi.string().allow('').optional(),
+  API_KEY: Joi.string().min(16).required(),
+  DB_TYPE: Joi.string().valid('sqlite', 'postgres').default('sqlite'),
+  DB_HOST: Joi.string().when('DB_TYPE', {
+    is: 'sqlite',
+    then: Joi.string().allow('').optional(),
+    otherwise: Joi.string().required(),
+  }),
+  DB_PORT: Joi.number()
+    .integer()
+    .when('DB_TYPE', {
+      is: 'sqlite',
+      then: Joi.number().optional(),
+      otherwise: Joi.number().required(),
+    }),
+  DB_USER: Joi.string().when('DB_TYPE', {
+    is: 'sqlite',
+    then: Joi.string().allow('').optional(),
+    otherwise: Joi.string().required(),
+  }),
+  DB_PASSWORD: Joi.string().when('DB_TYPE', {
+    is: 'sqlite',
+    then: Joi.string().allow('').optional(),
+    otherwise: Joi.string().required(),
+  }),
+  DB_BAZE: Joi.string().required(),
+});
+
+export type AppConfig = ReturnType<typeof configuration>;
+export type AppConfigService = ConfigService<AppConfig>;
