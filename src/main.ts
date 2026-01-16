@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './api/app.module';
-import { config } from 'src/config';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 
@@ -40,8 +39,8 @@ async function bootstrap() {
     });
 
     // Global Exception Filter larni shu yerda qo'shish mumkin
-
-    await app.listen(config.PORT || 3000);
+    const port = process.env.PORT || 3000;
+    await app.listen(port);
     console.log(`Application is running on: ${await app.getUrl()}`);
   } catch (error) {
     console.error('Fatal Error during startup:', error);

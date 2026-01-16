@@ -1,0 +1,51 @@
+modules = ["nodejs-20", "web"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.development]
+DB_TYPE = "postgres"
+DB_HOST = "helium"
+DB_PORT = "5432"
+DB_USER = "postgres"
+DB_PASSWORD = "password"
+DB_BAZE = "heliumdb"
+BOT_TOKEN = "placeholder_token"
+API_KEY = "dev_api_key_1234567890"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Web Frontend"
+
+[[workflows.workflow]]
+name = "Web Frontend"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd web && npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "static"
+build = ["bash", "-c", "cd web && npm run build"]
+publicDir = "web/build"
