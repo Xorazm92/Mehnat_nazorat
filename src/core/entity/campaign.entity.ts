@@ -36,15 +36,25 @@ export class Campaign {
   @Column({ nullable: true })
   responsible_officer: string; // telegram_id
 
-  @Column({ type: 'simple-enum', enum: ['DRAFT', 'ACTIVE', 'COMPLETED', 'CANCELLED'], default: 'DRAFT' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['DRAFT', 'ACTIVE', 'COMPLETED', 'CANCELLED'],
+    default: 'DRAFT',
+  })
   status: 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @OneToMany(() => CampaignAction, action => action.campaign, { cascade: true })
+  @OneToMany(() => CampaignAction, (action) => action.campaign, {
+    cascade: true,
+  })
   actions: CampaignAction[];
 }

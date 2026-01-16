@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { InventoryItem } from './inventory.entity';
 import { User } from './user.entity';
 
@@ -35,7 +41,9 @@ export class IssuanceLog {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   logged_at: Date;
 
-  @ManyToOne(() => InventoryItem, item => item.issuance_logs, { onDelete: 'CASCADE' })
+  @ManyToOne(() => InventoryItem, (item) => item.issuance_logs, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'inventory_item_id' })
   inventory_item: InventoryItem;
 

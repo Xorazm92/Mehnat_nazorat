@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Facility } from './facility.entity';
 import { User } from './user.entity';
 
@@ -28,16 +34,26 @@ export class ResponsibilityMatrix {
   @Column({ type: 'date', nullable: true })
   effective_to: Date;
 
-  @Column({ type: 'simple-enum', enum: ['ACTIVE', 'INACTIVE'], default: 'ACTIVE' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['ACTIVE', 'INACTIVE'],
+    default: 'ACTIVE',
+  })
   status: 'ACTIVE' | 'INACTIVE';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => Facility, facility => facility.responsibility_matrices, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Facility, (facility) => facility.responsibility_matrices, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'facility_id' })
   facility: Facility;
 

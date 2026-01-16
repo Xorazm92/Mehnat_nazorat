@@ -1,4 +1,4 @@
-import { Scene, SceneEnter, On, Hears, Ctx } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Hears, Ctx } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { PlanService } from 'src/core/services/plan.service';
 import { OrganizationService } from 'src/core/services/organization.service';
@@ -17,9 +17,8 @@ export class AnnualPlanApprovalScene {
     const userId = ctx.from.id.toString();
 
     // Get organizations where user is responsible
-    const responsibilities = await this.organizationService.getResponsibilitiesByUser(
-      userId,
-    );
+    const responsibilities =
+      await this.organizationService.getResponsibilitiesByUser(userId);
 
     if (responsibilities.length === 0) {
       await ctx.reply('❌ Sizga biriktirilgan tashkilot topilmadi.');
@@ -27,12 +26,13 @@ export class AnnualPlanApprovalScene {
       return;
     }
 
-    const orgIds = responsibilities.map(r => r.facility.organization_id);
+    const orgIds = responsibilities.map((r) => r.facility.organization_id);
     const uniqueOrgIds = [...new Set(orgIds)];
 
     const plans = [];
     for (const orgId of uniqueOrgIds) {
-      const orgPlans = await this.planService.getAnnualPlansByOrganization(orgId);
+      const orgPlans =
+        await this.planService.getAnnualPlansByOrganization(orgId);
       plans.push(...orgPlans);
     }
 
@@ -53,10 +53,10 @@ export class AnnualPlanApprovalScene {
 
       await ctx.reply(
         `📋 *Yillik Reja Tasdiqlash*\n\n` +
-        `Tashkilot: ${plan.organization.name}\n` +
-        `Reja turi: ${plan.type}\n` +
-        `Yil: ${plan.year}\n` +
-        `Tavsif: ${plan.description || 'Yo\'q'}`,
+          `Tashkilot: ${plan.organization.name}\n` +
+          `Reja turi: ${plan.type}\n` +
+          `Yil: ${plan.year}\n` +
+          `Tavsif: ${plan.description || "Yo'q"}`,
         {
           reply_markup: keyboard.reply_markup,
           parse_mode: 'Markdown',

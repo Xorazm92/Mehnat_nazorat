@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Task } from './task.entity';
 import { ComplianceItem } from './compliance-item.entity';
 
@@ -21,7 +27,11 @@ export class ComplianceCheck {
   @Column()
   compliance_item_id: string;
 
-  @Column({ type: 'simple-enum', enum: ComplianceStatus, default: ComplianceStatus.NOT_CHECKED })
+  @Column({
+    type: 'simple-enum',
+    enum: ComplianceStatus,
+    default: ComplianceStatus.NOT_CHECKED,
+  })
   status: ComplianceStatus;
 
   @Column({ type: 'text', nullable: true })
@@ -39,14 +49,22 @@ export class ComplianceCheck {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => Task, task => task.compliance_checks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Task, (task) => task.compliance_checks, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'task_id' })
   task: Task;
 
-  @ManyToOne(() => ComplianceItem, item => item.compliance_checks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => ComplianceItem, (item) => item.compliance_checks, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'compliance_item_id' })
   compliance_item: ComplianceItem;
 }

@@ -11,7 +11,7 @@ async function bootstrap() {
   const complianceService = app.get(ComplianceService);
   const inventoryService = app.get(InventoryService);
 
-  console.log('🌱 Seed ma\'lumotlarini qo\'shishni boshlayaman...');
+  console.log("🌱 Seed ma'lumotlarini qo'shishni boshlayaman...");
 
   // Create organizations
   console.log('📍 Tashkilotlar yaratilmoqda...');
@@ -25,17 +25,19 @@ async function bootstrap() {
     status: 'ACTIVE',
   });
 
-  const temiryo = await organizationService.createOrganization({
-    name: 'Temiryo\'l Kargo',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _temiryo = await organizationService.createOrganization({
+    name: "Temiryo'l Kargo",
     code: 'TEMIR_KARGO',
-    description: 'Temiryo\'l Kargo korxonasi',
+    description: "Temiryo'l Kargo korxonasi",
     address: 'Tashkent',
     phone: '+998901234567',
     email: 'admin@temirkargo.uz',
     status: 'ACTIVE',
   });
 
-  const o_zvagonta = await organizationService.createOrganization({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _o_zvagonta = await organizationService.createOrganization({
     name: "O'zvagonta'mir",
     code: "OZVAGONTA'MIR",
     description: "O'zvagonta'mir korxonasi",
@@ -43,7 +45,8 @@ async function bootstrap() {
     status: 'ACTIVE',
   });
 
-  const emtb = await organizationService.createOrganization({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _emtb = await organizationService.createOrganization({
     name: 'EMTB',
     code: 'EMTB',
     description: 'EMTB korxonasi',
@@ -51,7 +54,8 @@ async function bootstrap() {
     status: 'ACTIVE',
   });
 
-  const amz = await organizationService.createOrganization({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _amz = await organizationService.createOrganization({
     name: 'AMZ',
     code: 'AMZ',
     description: 'AMZ korxonasi',
@@ -60,18 +64,19 @@ async function bootstrap() {
   });
 
   // Create facilities for Qo'qon MTU
-  console.log('🏭 Qo\'llanuvchilar yaratilmoqda...');
+  console.log("🏭 Qo'llanuvchilar yaratilmoqda...");
   const facility1 = await organizationService.createFacility({
-    name: 'Qo\'qon Markaziy Sahnasi',
+    name: "Qo'qon Markaziy Sahnasi",
     code: 'QMS-001',
     organization_id: qoqunMtu.id,
-    division: 'Operatsiya bo\'limi',
+    division: "Operatsiya bo'limi",
     location: "Qo'qon markaziy stansiya",
     status: 'ACTIVE',
   });
 
-  const facility2 = await organizationService.createFacility({
-    name: 'Qo\'qon Elektr Sahnasi',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _facility2 = await organizationService.createFacility({
+    name: "Qo'qon Elektr Sahnasi",
     code: 'QES-001',
     organization_id: qoqunMtu.id,
     division: 'Elektr xizmati',
@@ -80,7 +85,7 @@ async function bootstrap() {
   });
 
   // Create responsibility matrices (responsible officers)
-  console.log('👥 Mas\'ullar tayinlanmoqda...');
+  console.log("👥 Mas'ullar tayinlanmoqda...");
 
   // Bobojonov Z.K - Raqamlashtirish
   const bobojonov_id = '123456789'; // These would be real telegram IDs
@@ -101,7 +106,7 @@ async function bootstrap() {
     user_id: saidgoziev_id,
     role: 'WINTER_PREP_OFFICER',
     scope: 'Kuz-qish tayyorgarligi, Hujjatlar aylanmasi',
-    kpi: 'Kuz-qish reja, Xodim ro\'yxatlari, Masala-talabalar',
+    kpi: "Kuz-qish reja, Xodim ro'yxatlari, Masala-talabalar",
     effective_from: new Date(),
     status: 'ACTIVE',
   });
@@ -119,14 +124,14 @@ async function bootstrap() {
   });
 
   // Seed compliance items
-  console.log('✅ Normativ talablar qo\'shilmoqda...');
+  console.log("✅ Normativ talablar qo'shilmoqda...");
   await complianceService.seedComplianceItems();
 
   // Seed inventory
-  console.log('📦 Inventar qo\'shilmoqda...');
+  console.log("📦 Inventar qo'shilmoqda...");
   await inventoryService.seedInventory();
 
-  console.log('✨ Seed ma\'lumotlar muvaffaqiyatli qo\'shildi!');
+  console.log("✨ Seed ma'lumotlar muvaffaqiyatli qo'shildi!");
   await app.close();
 }
 

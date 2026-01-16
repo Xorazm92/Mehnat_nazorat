@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ComplianceItem } from '../entity/compliance-item.entity';
-import { ComplianceCheck, ComplianceStatus } from '../entity/compliance-check.entity';
+import {
+  ComplianceCheck,
+  ComplianceStatus,
+} from '../entity/compliance-check.entity';
 
 @Injectable()
 export class ComplianceService {
@@ -28,7 +31,9 @@ export class ComplianceService {
     });
   }
 
-  async getComplianceItemsByCategory(category: string): Promise<ComplianceItem[]> {
+  async getComplianceItemsByCategory(
+    category: string,
+  ): Promise<ComplianceItem[]> {
     return this.complianceItemRepository.find({
       where: { category },
       relations: ['compliance_checks'],
@@ -111,7 +116,7 @@ export class ComplianceService {
     if (checks.length === 0) return 0;
 
     const compliantCount = checks.filter(
-      c => c.status === ComplianceStatus.COMPLIANT,
+      (c) => c.status === ComplianceStatus.COMPLIANT,
     ).length;
     return Math.round((compliantCount / checks.length) * 100);
   }
@@ -130,19 +135,19 @@ export class ComplianceService {
         })
       : await this.getAllComplianceItems();
 
-    const allChecks = items.flatMap(i => i.compliance_checks);
+    const allChecks = items.flatMap((i) => i.compliance_checks);
 
     const compliant = allChecks.filter(
-      c => c.status === ComplianceStatus.COMPLIANT,
+      (c) => c.status === ComplianceStatus.COMPLIANT,
     ).length;
     const nonCompliant = allChecks.filter(
-      c => c.status === ComplianceStatus.NON_COMPLIANT,
+      (c) => c.status === ComplianceStatus.NON_COMPLIANT,
     ).length;
     const partial = allChecks.filter(
-      c => c.status === ComplianceStatus.PARTIAL_COMPLIANCE,
+      (c) => c.status === ComplianceStatus.PARTIAL_COMPLIANCE,
     ).length;
     const notChecked = allChecks.filter(
-      c => c.status === ComplianceStatus.NOT_CHECKED,
+      (c) => c.status === ComplianceStatus.NOT_CHECKED,
     ).length;
 
     return {
@@ -164,7 +169,7 @@ export class ComplianceService {
       {
         article_number: 'Art. 1',
         requirement:
-          'Hayot va sog\'lig\'ini muhofaza qilish choralari harfiy bajarilishi',
+          "Hayot va sog'lig'ini muhofaza qilish choralari harfiy bajarilishi",
         category: 'SAFETY',
         severity: 'MANDATORY' as const,
       },
@@ -176,13 +181,13 @@ export class ComplianceService {
       },
       {
         article_number: 'Art. 3',
-        requirement: 'Profilaktika chora-tadbirlarini o\'z vaqtida bajarish',
+        requirement: "Profilaktika chora-tadbirlarini o'z vaqtida bajarish",
         category: 'MAINTENANCE',
         severity: 'MANDATORY' as const,
       },
       {
         article_number: 'Art. 4',
-        requirement: 'Xavfsiz ish sharoitlarini ta\'minlash',
+        requirement: "Xavfsiz ish sharoitlarini ta'minlash",
         category: 'SAFETY',
         severity: 'MANDATORY' as const,
       },
@@ -206,7 +211,7 @@ export class ComplianceService {
       },
       {
         article_number: 'Art. 8',
-        requirement: 'Oylik hisobotlar va tahlilni o\'z vaqtida topshirish',
+        requirement: "Oylik hisobotlar va tahlilni o'z vaqtida topshirish",
         category: 'REPORTING',
         severity: 'MANDATORY' as const,
       },

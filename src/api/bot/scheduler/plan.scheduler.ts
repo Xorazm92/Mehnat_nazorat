@@ -4,7 +4,6 @@ import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { PlanService } from 'src/core/services/plan.service';
 import { OrganizationService } from 'src/core/services/organization.service';
-import { MonthlyPlanStatus } from 'src/core/entity/monthly-plan.entity';
 
 @Injectable()
 export class PlanScheduler {
@@ -50,7 +49,9 @@ export class PlanScheduler {
         }
       }
 
-      this.logger.log(`✅ ${overdueItems.length} ta overdue vazifa ogohlantirmasyi yuborildi`);
+      this.logger.log(
+        `✅ ${overdueItems.length} ta overdue vazifa ogohlantirmasyi yuborildi`,
+      );
     } catch (error) {
       this.logger.error('Overdue ogohlantirish xatosi:', error);
     }
@@ -61,8 +62,11 @@ export class PlanScheduler {
   async createMonthlyPlans() {
     try {
       const now = new Date();
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth(), daysInMonth);
+      const daysInMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+      ).getDate();
 
       // Faqat oyning oxirgi kuni bajariladi
       if (now.getDate() !== daysInMonth) {
@@ -71,7 +75,8 @@ export class PlanScheduler {
 
       this.logger.log('📅 Oyning oxirgi kunida oylik rejalar yaratilmoqda...');
 
-      const organizations = await this.organizationService.getAllOrganizations();
+      const organizations =
+        await this.organizationService.getAllOrganizations();
 
       for (const org of organizations) {
         const nextMonth = new Date(now);
@@ -83,17 +88,23 @@ export class PlanScheduler {
 
         for (const annualPlan of annualPlans) {
           // Generate monthly plans for next month
-          await this.planService.generateMonthlyPlansFromAnnualPlan(annualPlan.id);
+          await this.planService.generateMonthlyPlansFromAnnualPlan(
+            annualPlan.id,
+          );
 
           // Notify facility managers
           const facilities = org.facilities;
           for (const facility of facilities) {
-            const responsibilities = await this.organizationService.getResponsibilitiesByFacility(
-              facility.id,
-            );
+            const responsibilities =
+              await this.organizationService.getResponsibilitiesByFacility(
+                facility.id,
+              );
 
             for (const responsibility of responsibilities) {
-              if (responsibility.role === 'MANAGER' || responsibility.role === 'COORDINATOR') {
+              if (
+                responsibility.role === 'MANAGER' ||
+                responsibility.role === 'COORDINATOR'
+              ) {
                 const message =
                   `📋 *OYLIK REJA TAYYORLANDI*\n\n` +
                   `Tashkilot: ${org.name}\n` +
@@ -121,7 +132,9 @@ export class PlanScheduler {
         }
       }
 
-      this.logger.log('✅ Oylik rejalar yaratildi va ogohlantirmalar yuborildi');
+      this.logger.log(
+        '✅ Oylik rejalar yaratildi va ogohlantirmalar yuborildi',
+      );
     } catch (error) {
       this.logger.error('Oylik rejalar yaratish xatosi:', error);
     }
@@ -133,15 +146,20 @@ export class PlanScheduler {
     try {
       this.logger.log('📊 Oylik tahlil ogohlantirmasi yuborilmoqda...');
 
-      const organizations = await this.organizationService.getAllOrganizations();
+      const organizations =
+        await this.organizationService.getAllOrganizations();
 
       for (const org of organizations) {
-        const responsibilities = await this.organizationService.getResponsibilitiesByFacility(
-          org.facilities[0]?.id || '',
-        );
+        const responsibilities =
+          await this.organizationService.getResponsibilitiesByFacility(
+            org.facilities[0]?.id || '',
+          );
 
         for (const responsibility of responsibilities) {
-          if (responsibility.role === 'MANAGER' || responsibility.role === 'COORDINATOR') {
+          if (
+            responsibility.role === 'MANAGER' ||
+            responsibility.role === 'COORDINATOR'
+          ) {
             const message =
               `📊 *O'TGAN OY TAHLILI*\n\n` +
               `Tashkilot: ${org.name}\n` +
@@ -178,19 +196,16 @@ export class PlanScheduler {
     try {
       this.logger.log('🛡️ Xavfsizlik kuni ogohlantirmasi yuborilmoqda...');
 
-      const organizations = await this.organizationService.getAllOrganizations();
+      const organizations =
+        await this.organizationService.getAllOrganizations();
 
       for (const org of organizations) {
-        const message =
-          `🛡️ *XAVFSIZLIK KUNI*\n\n` +
-          `Tashkilot: ${org.name}\n\n` +
-          `Bugun xavfsizlik choralari va profilaktika toping bo'yicha ishlar bajariladi.\n` +
-          `Barcha xodimlar asosi qilishda ishtiroki majburiy.`;
-
         try {
-          // Bu yerda hamma oyg'ni bildirishnoma yuborish kerak
-          // Ichki ilova uchun ma'lumotlar bazasini yangilash
-          this.logger.log(`Tashkilot ${org.name} uchun xavfsizlik kuni bildirishnomasi tayyorlandi`);
+          // Bu yerda hamma xodimga bildirishnoma yuborish kerak
+          // Hozircha faqat log yozamiz
+          this.logger.log(
+            `Tashkilot ${org.name} uchun xavfsizlik kuni bildirishnomasi tayyorlandi`,
+          );
         } catch (error) {
           this.logger.error(
             `Tashkilot ${org.name} uchun xavfsizlik kuni bildirishnomasi xatosi`,
@@ -209,19 +224,19 @@ export class PlanScheduler {
   @Cron('0 8 1 9 *') // Sentyabr 1-sana, saat 8:00
   async notifyWinterPreparation() {
     try {
-      this.logger.log('❄️ Kuz-qish tayyorgarligi ogohlantirmasi yuborilmoqda...');
+      this.logger.log(
+        '❄️ Kuz-qish tayyorgarligi ogohlantirmasi yuborilmoqda...',
+      );
 
-      const organizations = await this.organizationService.getAllOrganizations();
+      const organizations =
+        await this.organizationService.getAllOrganizations();
 
       for (const org of organizations) {
-        const message =
-          `❄️ *KUZ-QISH TAYYORGARLIGI*\n\n` +
-          `Tashkilot: ${org.name}\n\n` +
-          `Kuz-qish mavsumiga tayyorgarlik choralari boshlanyapti.\n` +
-          `Rejalar va muhim ishlarga e'tibor bering.`;
-
         try {
-          this.logger.log(`Tashkilot ${org.name} uchun kuz-qish tayyorgarligi bildirishnomasi tayyorlandi`);
+          // Hozircha faqat log yozamiz
+          this.logger.log(
+            `Tashkilot ${org.name} uchun kuz-qish tayyorgarligi bildirishnomasi tayyorlandi`,
+          );
         } catch (error) {
           this.logger.error(
             `Tashkilot ${org.name} uchun kuz-qish tayyorgarligi xatosi`,

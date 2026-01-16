@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { Organization } from './organization.entity';
 import { MonthlyPlan } from './monthly-plan.entity';
 
@@ -37,7 +44,11 @@ export class AnnualPlan {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'simple-enum', enum: ApprovalStatus, default: ApprovalStatus.DRAFT })
+  @Column({
+    type: 'simple-enum',
+    enum: ApprovalStatus,
+    default: ApprovalStatus.DRAFT,
+  })
   approval_status: ApprovalStatus;
 
   @Column({ nullable: true })
@@ -49,13 +60,19 @@ export class AnnualPlan {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => Organization, org => org.annual_plans, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Organization, (org) => org.annual_plans, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'organization_id' })
   organization: Organization;
 
-  @OneToMany(() => MonthlyPlan, plan => plan.annual_plan, { cascade: true })
+  @OneToMany(() => MonthlyPlan, (plan) => plan.annual_plan, { cascade: true })
   monthly_plans: MonthlyPlan[];
 }

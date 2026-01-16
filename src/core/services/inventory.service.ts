@@ -14,7 +14,9 @@ export class InventoryService {
   ) {}
 
   // Inventory Item Methods
-  async createInventoryItem(data: Partial<InventoryItem>): Promise<InventoryItem> {
+  async createInventoryItem(
+    data: Partial<InventoryItem>,
+  ): Promise<InventoryItem> {
     const item = this.inventoryItemRepository.create(data);
     return this.inventoryItemRepository.save(item);
   }
@@ -156,7 +158,7 @@ export class InventoryService {
     expiringDate.setDate(expiringDate.getDate() + 30);
 
     const expiring_soon = allItems.filter(
-      item =>
+      (item) =>
         item.expiry_date &&
         item.expiry_date <= expiringDate &&
         item.expiry_date > new Date(),
@@ -179,34 +181,34 @@ export class InventoryService {
   async seedInventory(): Promise<void> {
     const items = [
       {
-        name: 'Xavfsizlik dubulg\'asi (Helmet)',
+        name: "Xavfsizlik dubulg'asi (Helmet)",
         code: 'HELMET-001',
         type: InventoryType.PROTECTIVE_CLOTHING,
-        description: 'Temir yo\'l xodimlarining sho\'rmali dubulg\'asi',
+        description: "Temir yo'l xodimlarining sho'rmali dubulg'asi",
         unit: 'pcs',
         total_quantity: 100,
       },
       {
-        name: 'Qaytariluvchi ko\'ylak',
+        name: "Qaytariluvchi ko'ylak",
         code: 'VEST-001',
         type: InventoryType.PROTECTIVE_CLOTHING,
-        description: 'Reflektiv qaytariluvchi ko\'ylak',
+        description: "Reflektiv qaytariluvchi ko'ylak",
         unit: 'pcs',
         total_quantity: 150,
       },
       {
-        name: 'Qo\'l qo\'riqlovchisi',
+        name: "Qo'l qo'riqlovchisi",
         code: 'GLOVES-001',
         type: InventoryType.PROTECTIVE_CLOTHING,
-        description: 'Chiqaloq qo\'l qo\'riqlovchisi',
+        description: "Chiqaloq qo'l qo'riqlovchisi",
         unit: 'pairs',
         total_quantity: 200,
       },
       {
-        name: 'Oyoq qo\'riqlovchisi',
+        name: "Oyoq qo'riqlovchisi",
         code: 'BOOTS-001',
         type: InventoryType.PROTECTIVE_CLOTHING,
-        description: 'Xavfsizlik oyoq qo\'riqlovchisi',
+        description: "Xavfsizlik oyoq qo'riqlovchisi",
         unit: 'pairs',
         total_quantity: 100,
       },
@@ -214,15 +216,15 @@ export class InventoryService {
         name: 'Talon (Respirator)',
         code: 'RESPIRATOR-001',
         type: InventoryType.SAFETY_EQUIPMENT,
-        description: 'Til ko\'rtilgan talon',
+        description: "Til ko'rtilgan talon",
         unit: 'pcs',
         total_quantity: 300,
       },
       {
-        name: 'Ko\'z qo\'riqlovchisi',
+        name: "Ko'z qo'riqlovchisi",
         code: 'GOGGLES-001',
         type: InventoryType.PROTECTIVE_CLOTHING,
-        description: 'Kimyoviy ko\'z qo\'riqlovchisi',
+        description: "Kimyoviy ko'z qo'riqlovchisi",
         unit: 'pcs',
         total_quantity: 150,
       },

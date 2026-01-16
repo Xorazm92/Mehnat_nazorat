@@ -48,11 +48,15 @@ async function createAdmin() {
         role: adminData.role,
         status: adminData.status,
       });
-      console.log(`Admin yangilandi: ${adminData.first_name} ${adminData.last_name}`);
+      console.log(
+        `Admin yangilandi: ${adminData.first_name} ${adminData.last_name}`,
+      );
     } else {
       const admin = userRepo.create(adminData);
       await userRepo.save(admin);
-      console.log(`Admin yaratildi: ${adminData.first_name} ${adminData.last_name}`);
+      console.log(
+        `Admin yaratildi: ${adminData.first_name} ${adminData.last_name}`,
+      );
     }
   }
 

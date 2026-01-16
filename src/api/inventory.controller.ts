@@ -1,14 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Body,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param } from '@nestjs/common';
 import { InventoryService } from 'src/core/services/inventory.service';
-import { InventoryItem, InventoryType } from 'src/core/entity/inventory.entity';
+import { InventoryType } from 'src/core/entity/inventory.entity';
+import {
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  IssueInventoryDto,
+  ReturnInventoryDto,
+  DamagedInventoryDto,
+} from './dto/inventory.dto';
 
 @Controller('api/inventory')
 export class InventoryController {
@@ -16,8 +15,8 @@ export class InventoryController {
 
   // Inventory Item Endpoints
   @Post('items')
-  async createInventoryItem(@Body() data: Partial<InventoryItem>) {
-    return this.inventoryService.createInventoryItem(data);
+  async createInventoryItem(@Body() dto: CreateInventoryItemDto) {
+    return this.inventoryService.createInventoryItem(dto);
   }
 
   @Get('items/:id')
@@ -43,9 +42,9 @@ export class InventoryController {
   @Put('items/:id')
   async updateInventoryItem(
     @Param('id') id: string,
-    @Body() data: Partial<InventoryItem>,
+    @Body() dto: UpdateInventoryItemDto,
   ) {
-    return this.inventoryService.updateInventoryItem(id, data);
+    return this.inventoryService.updateInventoryItem(id, dto);
   }
 
   @Post('items/seed')
@@ -56,63 +55,40 @@ export class InventoryController {
 
   // Issuance Log Endpoints
   @Post('issue')
-  async issueInventory(
-    @Body()
-    body: {
-      inventoryItemId: string;
-      userId: string;
-      quantity: number;
-      issuedBy: string;
-      notes?: string;
-    },
-  ) {
+  async issueInventory(@Body() dto: IssueInventoryDto) {
     return this.inventoryService.issueInventory(
-      body.inventoryItemId,
-      body.userId,
-      body.quantity,
-      body.issuedBy,
-      body.notes,
+      dto.inventoryItemId,
+      dto.userId,
+      dto.quantity,
+      dto.issuedBy,
+      dto.notes,
     );
   }
 
   @Post('return')
-  async returnInventory(
-    @Body()
-    body: {
-      inventoryItemId: string;
-      userId: string;
-      quantity: number;
-      notes?: string;
-    },
-  ) {
+  async returnInventory(@Body() dto: ReturnInventoryDto) {
     return this.inventoryService.returnInventory(
-      body.inventoryItemId,
-      body.userId,
-      body.quantity,
-      body.notes,
+      dto.inventoryItemId,
+      dto.userId,
+      dto.quantity,
+      dto.notes,
     );
   }
 
   @Post('damaged')
-  async reportDamaged(
-    @Body()
-    body: {
-      inventoryItemId: string;
-      userId: string;
-      quantity: number;
-      notes?: string;
-    },
-  ) {
+  async reportDamaged(@Body() dto: DamagedInventoryDto) {
     return this.inventoryService.reportDamaged(
-      body.inventoryItemId,
-      body.userId,
-      body.quantity,
-      body.notes,
+      dto.inventoryItemId,
+      dto.userId,
+      dto.quantity,
+      dto.notes,
     );
   }
 
   @Get('logs/item/:inventoryItemId')
-  async getIssuanceLogsByItem(@Param('inventoryItemId') inventoryItemId: string) {
+  async getIssuanceLogsByItem(
+    @Param('inventoryItemId') inventoryItemId: string,
+  ) {
     return this.inventoryService.getIssuanceLogsByItem(inventoryItemId);
   }
 

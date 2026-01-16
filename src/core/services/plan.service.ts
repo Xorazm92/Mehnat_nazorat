@@ -86,7 +86,10 @@ export class PlanService {
     });
   }
 
-  async approveMonthlyPlan(id: string, approvedBy: string): Promise<MonthlyPlan> {
+  async approveMonthlyPlan(
+    id: string,
+    approvedBy: string,
+  ): Promise<MonthlyPlan> {
     await this.monthlyPlanRepository.update(id, {
       status: MonthlyPlanStatus.APPROVED,
       approved_by: approvedBy,
@@ -166,7 +169,9 @@ export class PlanService {
     return this.getPlanItemById(id);
   }
 
-  async getItemsNearingDeadline(daysBeforeDeadline: number = 3): Promise<PlanItem[]> {
+  async getItemsNearingDeadline(
+    daysBeforeDeadline: number = 3,
+  ): Promise<PlanItem[]> {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + daysBeforeDeadline);
 
@@ -180,7 +185,9 @@ export class PlanService {
   }
 
   // Automatic monthly plan generation from annual plan
-  async generateMonthlyPlansFromAnnualPlan(annualPlanId: string): Promise<void> {
+  async generateMonthlyPlansFromAnnualPlan(
+    annualPlanId: string,
+  ): Promise<void> {
     const annualPlan = await this.getAnnualPlanById(annualPlanId);
 
     // Create monthly plans for each facility

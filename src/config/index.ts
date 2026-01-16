@@ -33,13 +33,11 @@ export const validationSchema = Joi.object({
     then: Joi.string().allow('').optional(),
     otherwise: Joi.string().required(),
   }),
-  DB_PORT: Joi.number()
-    .integer()
-    .when('DB_TYPE', {
-      is: 'sqlite',
-      then: Joi.number().optional(),
-      otherwise: Joi.number().required(),
-    }),
+  DB_PORT: Joi.number().integer().when('DB_TYPE', {
+    is: 'sqlite',
+    then: Joi.number().optional(),
+    otherwise: Joi.number().required(),
+  }),
   DB_USER: Joi.string().when('DB_TYPE', {
     is: 'sqlite',
     then: Joi.string().allow('').optional(),

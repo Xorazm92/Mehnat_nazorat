@@ -85,7 +85,9 @@ export class OrganizationService {
     });
   }
 
-  async getResponsibilitiesByUser(userId: string): Promise<ResponsibilityMatrix[]> {
+  async getResponsibilitiesByUser(
+    userId: string,
+  ): Promise<ResponsibilityMatrix[]> {
     return this.responsibilityMatrixRepository.find({
       where: { user_id: userId, status: 'ACTIVE' },
       relations: ['facility'],

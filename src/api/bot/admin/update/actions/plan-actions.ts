@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Ctx, Action, Hears, Command } from 'nestjs-telegraf';
+import { Ctx, Action } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { Markup } from 'telegraf';
 import { PlanService } from 'src/core/services/plan.service';
@@ -64,8 +64,8 @@ export class AdminPlanActions {
       await ctx.answerCbQuery('✅ Reja tasdiqlandi');
       await ctx.editMessageText(
         `✅ *Reja tasdiqlandi*\n\n` +
-        `Tashkilot: ${plan.organization.name}\n` +
-        `Tasdiqlandi: ${new Date().toLocaleDateString('uz-UZ')}`,
+          `Tashkilot: ${plan.organization.name}\n` +
+          `Tasdiqlandi: ${new Date().toLocaleDateString('uz-UZ')}`,
         {
           parse_mode: 'Markdown',
         },
@@ -93,8 +93,8 @@ export class AdminPlanActions {
       await ctx.answerCbQuery('❌ Reja rad etildi');
       await ctx.editMessageText(
         `❌ *Reja rad etildi*\n\n` +
-        `Tashkilot: ${plan.organization.name}\n` +
-        `Rad etildi: ${new Date().toLocaleDateString('uz-UZ')}`,
+          `Tashkilot: ${plan.organization.name}\n` +
+          `Rad etildi: ${new Date().toLocaleDateString('uz-UZ')}`,
         {
           parse_mode: 'Markdown',
         },
@@ -110,7 +110,6 @@ export class AdminPlanActions {
     try {
       await ctx.answerCbQuery('Inventar yuklanyapti...');
 
-      const inventory = await this.inventoryService.getAllInventory();
       const status = await this.inventoryService.getInventoryStatus();
 
       const message =

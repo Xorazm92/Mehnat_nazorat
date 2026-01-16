@@ -13,7 +13,7 @@ import { UserStatus, UserRole } from 'src/common/enum';
 
 @Scene('RegisterScene')
 export class RegisterScene {
-  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
   @SceneEnter()
   async onEnter(@Ctx() ctx: ContextType) {
     await ctx.reply('Ismingizni kiriting: ');
@@ -32,7 +32,7 @@ export class RegisterScene {
 
 @Scene('AskLastName')
 export class AskLastName {
-  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
   @SceneEnter()
   async onEnter(@Ctx() ctx: ContextType) {
     await ctx.reply('Familyangizni kiriting: ');
@@ -72,7 +72,7 @@ export class AskDepartmentScene {
     private readonly departmentRepo: DepartmentRepository,
     @InjectRepository(User)
     private readonly userRepo: UserRepository,
-  ) { }
+  ) {}
   @SceneEnter()
   async onEnter(@Ctx() ctx: ContextType) {
     const buttons = await this.buttons.generateDepartmentKeys(
@@ -134,10 +134,10 @@ export class AskDepartmentScene {
 
     await ctx.editMessageText(
       `Ma'lumotlarni tasdiqlaylaysizmi:\n` +
-      `<b>Ism:</b> ${obj.first_name}\n` +
-      `<b>Familya:</b> ${obj.last_name}\n` +
-      `<b>Raqam:</b> ${obj.phone_number}\n` +
-      `<b>Bo'lim:</b> ${departments[departments.length - 1]}`,
+        `<b>Ism:</b> ${obj.first_name}\n` +
+        `<b>Familya:</b> ${obj.last_name}\n` +
+        `<b>Raqam:</b> ${obj.phone_number}\n` +
+        `<b>Bo'lim:</b> ${departments[departments.length - 1]}`,
       {
         parse_mode: 'HTML',
         reply_markup: {

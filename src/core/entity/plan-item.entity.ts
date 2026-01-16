@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { MonthlyPlan } from './monthly-plan.entity';
 import { Task } from './task.entity';
 
@@ -32,7 +39,11 @@ export class PlanItem {
   @Column({ type: 'date' })
   due_date: Date;
 
-  @Column({ type: 'simple-enum', enum: PlanItemStatus, default: PlanItemStatus.NOT_STARTED })
+  @Column({
+    type: 'simple-enum',
+    enum: PlanItemStatus,
+    default: PlanItemStatus.NOT_STARTED,
+  })
   status: PlanItemStatus;
 
   @Column({ type: 'integer', default: 0 })
@@ -50,13 +61,17 @@ export class PlanItem {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => MonthlyPlan, plan => plan.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => MonthlyPlan, (plan) => plan.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'monthly_plan_id' })
   monthly_plan: MonthlyPlan;
 
-  @OneToMany(() => Task, task => task.plan_item, { cascade: true })
+  @OneToMany(() => Task, (task) => task.plan_item, { cascade: true })
   tasks: Task[];
 }

@@ -22,7 +22,7 @@ export class CreateReportScene {
     private readonly taskService: TaskService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   @SceneEnter()
   async onEnter(@Ctx() ctx: ContextType) {
@@ -125,7 +125,8 @@ export class CreateReportScene {
         ctx.session.reportCompletionPercentage = percentage;
 
         // Confirmation Summary
-        const summary = `📝 Hisobot:\n\n` +
+        const summary =
+          `📝 Hisobot:\n\n` +
           `📄 Matn: ${ctx.session.reportText}\n` +
           `📊 Bajarildi: ${percentage}%\n\n`;
 
@@ -149,8 +150,6 @@ export class CreateReportScene {
         break;
     }
   }
-
-
 
   @On('document')
   async onDocument(@Ctx() ctx: ContextType) {

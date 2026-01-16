@@ -37,7 +37,8 @@ export class StatisticsService {
     for (const task of completedTasks) {
       if (task.completed_at && task.created_at) {
         const completionTime =
-          (new Date(task.completed_at).getTime() - new Date(task.created_at).getTime()) /
+          (new Date(task.completed_at).getTime() -
+            new Date(task.created_at).getTime()) /
           (1000 * 60 * 60); // soatlarda
         totalCompletionTime += completionTime;
         completedCount++;

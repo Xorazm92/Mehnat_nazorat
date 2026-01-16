@@ -1,4 +1,4 @@
-import { Scene, SceneEnter, On, Hears, Ctx } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Hears, Ctx } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { PlanService } from 'src/core/services/plan.service';
 import { ComplianceService } from 'src/core/services/compliance.service';
@@ -13,19 +13,22 @@ export class ComplianceChecklistScene {
 
   @SceneEnter()
   async enter(@Ctx() ctx: Context) {
-    const userId = ctx.from.id.toString();
-
     // Get plan items assigned to this user
     // This would typically fetch from monthly plans assigned to user
     const keyboard = Markup.inlineKeyboard([
-      [Markup.button.callback('📋 Reja ko\'rish', 'view_monthly_plans')],
-      [Markup.button.callback('✅ Compliance bajarildi', 'mark_compliance_done')],
+      [Markup.button.callback("📋 Reja ko'rish", 'view_monthly_plans')],
+      [
+        Markup.button.callback(
+          '✅ Compliance bajarildi',
+          'mark_compliance_done',
+        ),
+      ],
       [Markup.button.callback('❌ Bekor qilish', 'cancel')],
     ]);
 
     await ctx.reply(
       `📝 *Normativ Talablar Checklist*\n\n` +
-      `Siz tayinlangan vazifalarni bajarishni boshlaylik.`,
+        `Siz tayinlangan vazifalarni bajarishni boshlaylik.`,
       {
         reply_markup: keyboard.reply_markup,
         parse_mode: 'Markdown',

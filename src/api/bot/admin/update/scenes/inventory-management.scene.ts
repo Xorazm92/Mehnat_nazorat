@@ -10,7 +10,7 @@ export class InventoryManagementScene {
   @SceneEnter()
   async enter(@Ctx() ctx: Context) {
     const keyboard = Markup.inlineKeyboard([
-      [Markup.button.callback('📦 Inventarni ko\'rish', 'view_inventory')],
+      [Markup.button.callback("📦 Inventarni ko'rish", 'view_inventory')],
       [
         Markup.button.callback('➕ Berish', 'issue_item'),
         Markup.button.callback('⬅️ Qaytarish', 'return_item'),
@@ -23,8 +23,7 @@ export class InventoryManagementScene {
     ]);
 
     await ctx.reply(
-      `📦 *Talon va Maxsus Kiyim Boshqaruvi*\n\n` +
-      `Amaliyotni tanlang:`,
+      `📦 *Talon va Maxsus Kiyim Boshqaruvi*\n\n` + `Amaliyotni tanlang:`,
       {
         reply_markup: keyboard.reply_markup,
         parse_mode: 'Markdown',

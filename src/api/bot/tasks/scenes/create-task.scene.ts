@@ -22,7 +22,7 @@ export class CreateTaskScene {
     private readonly taskService: TaskService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   @SceneEnter()
   async onEnter(@Ctx() ctx: ContextType) {
@@ -45,7 +45,9 @@ export class CreateTaskScene {
   @Hears('✅ Davom etish')
   async continue(@Ctx() ctx: ContextType) {
     const currentStep = this.step.get(ctx.from.id);
-    console.log(`DEBUG: continue triggered. Step: ${currentStep}, User: ${ctx.from.id}`);
+    console.log(
+      `DEBUG: continue triggered. Step: ${currentStep}, User: ${ctx.from.id}`,
+    );
 
     if (currentStep === 'files') {
       console.log('DEBUG: calling createTask');
@@ -129,7 +131,7 @@ export class CreateTaskScene {
       });
 
       if (employees.length === 0) {
-        await ctx.reply("Xodimlar topilmadi.");
+        await ctx.reply('Xodimlar topilmadi.');
         return;
       }
 
@@ -152,14 +154,11 @@ export class CreateTaskScene {
         buttons.push(row);
       }
 
-      await ctx.reply(
-        TASK_MESSAGES.SELECT_EMPLOYEE,
-        {
-          reply_markup: {
-            inline_keyboard: buttons,
-          },
+      await ctx.reply(TASK_MESSAGES.SELECT_EMPLOYEE, {
+        reply_markup: {
+          inline_keyboard: buttons,
         },
-      );
+      });
     } else if (data.startsWith('select_emp_')) {
       const employeeId = data.replace('select_emp_', '');
 
@@ -168,7 +167,7 @@ export class CreateTaskScene {
       });
 
       if (!employee) {
-        await ctx.answerCbQuery("Xodim topilmadi");
+        await ctx.answerCbQuery('Xodim topilmadi');
         return;
       }
 
@@ -179,19 +178,20 @@ export class CreateTaskScene {
       await ctx.editMessageText(
         `✅ Xodim tanlandi: ${employee.first_name} ${employee.last_name}\n\n${TASK_MESSAGES.ATTACH_FILES}`,
       );
-      await ctx.reply("Fayllarni yuboring yoki 'Davom etish' tugmasini bosing:", {
-        reply_markup: {
-          keyboard: [
-            [{ text: '✅ Davom etish' }],
-            [{ text: '❌ Bekor qilish' }],
-          ],
-          resize_keyboard: true,
+      await ctx.reply(
+        "Fayllarni yuboring yoki 'Davom etish' tugmasini bosing:",
+        {
+          reply_markup: {
+            keyboard: [
+              [{ text: '✅ Davom etish' }],
+              [{ text: '❌ Bekor qilish' }],
+            ],
+            resize_keyboard: true,
+          },
         },
-      });
+      );
     }
   }
-
-
 
   @On('document')
   async onDocument(@Ctx() ctx: ContextType) {
@@ -205,7 +205,9 @@ export class CreateTaskScene {
         '✅ Fayl qo\'shildi. Yana fayl yuborishingiz yoki "Davom etish" tugmasini bosishingiz mumkin.',
       );
     } else {
-      await ctx.reply("⚠️ Iltimos, hozirgi bosqichda faqat matn kiriting. Fayllarni oxirgi bosqichda yuklashingiz mumkin.");
+      await ctx.reply(
+        '⚠️ Iltimos, hozirgi bosqichda faqat matn kiriting. Fayllarni oxirgi bosqichda yuklashingiz mumkin.',
+      );
     }
   }
 
@@ -243,7 +245,9 @@ export class CreateTaskScene {
       ctx.session.taskAudios.push(fileId);
       await ctx.reply("✅ Audio qo'shildi.");
     } else {
-      await ctx.reply("⚠️ Iltimos, hozirgi bosqichda faqat matn kiriting. Audiolarni oxirgi bosqichda yuklashingiz mumkin.");
+      await ctx.reply(
+        '⚠️ Iltimos, hozirgi bosqichda faqat matn kiriting. Audiolarni oxirgi bosqichda yuklashingiz mumkin.',
+      );
     }
   }
 

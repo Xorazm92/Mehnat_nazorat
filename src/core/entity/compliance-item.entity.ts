@@ -18,15 +18,25 @@ export class ComplianceItem {
   @Column()
   category: string; // e.g., "SAFETY", "MAINTENANCE", "INVENTORY", "REPORTING"
 
-  @Column({ type: 'simple-enum', enum: ['MANDATORY', 'RECOMMENDED'], default: 'MANDATORY' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['MANDATORY', 'RECOMMENDED'],
+    default: 'MANDATORY',
+  })
   severity: 'MANDATORY' | 'RECOMMENDED';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @OneToMany(() => ComplianceCheck, check => check.compliance_item, { cascade: true })
+  @OneToMany(() => ComplianceCheck, (check) => check.compliance_item, {
+    cascade: true,
+  })
   compliance_checks: ComplianceCheck[];
 }

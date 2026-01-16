@@ -18,7 +18,7 @@ export class SalaryUpdate {
   constructor(
     private readonly salaryService: SalaryService,
     @InjectRepository(User) private readonly userRepo: UserRepository,
-  ) { }
+  ) {}
 
   @Hears('💰 Maosh') // Manager Menu
   async salaryMenu(@Ctx() ctx: ContextType) {

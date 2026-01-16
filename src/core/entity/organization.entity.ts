@@ -25,18 +25,28 @@ export class Organization {
   @Column({ nullable: true })
   email: string;
 
-  @Column({ type: 'simple-enum', enum: ['ACTIVE', 'INACTIVE'], default: 'ACTIVE' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['ACTIVE', 'INACTIVE'],
+    default: 'ACTIVE',
+  })
   status: 'ACTIVE' | 'INACTIVE';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @OneToMany(() => Facility, facility => facility.organization, { cascade: true })
+  @OneToMany(() => Facility, (facility) => facility.organization, {
+    cascade: true,
+  })
   facilities: Facility[];
 
-  @OneToMany(() => AnnualPlan, plan => plan.organization, { cascade: true })
+  @OneToMany(() => AnnualPlan, (plan) => plan.organization, { cascade: true })
   annual_plans: AnnualPlan[];
 }

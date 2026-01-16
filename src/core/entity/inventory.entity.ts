@@ -44,15 +44,23 @@ export class InventoryItem {
   @Column({ type: 'date', nullable: true })
   expiry_date: Date;
 
-  @Column({ type: 'simple-enum', enum: ['ACTIVE', 'ARCHIVED'], default: 'ACTIVE' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['ACTIVE', 'ARCHIVED'],
+    default: 'ACTIVE',
+  })
   status: 'ACTIVE' | 'ARCHIVED';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @OneToMany(() => IssuanceLog, log => log.inventory_item, { cascade: true })
+  @OneToMany(() => IssuanceLog, (log) => log.inventory_item, { cascade: true })
   issuance_logs: IssuanceLog[];
 }

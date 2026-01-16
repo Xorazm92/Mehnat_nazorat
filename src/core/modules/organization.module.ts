@@ -6,8 +6,10 @@ import { ResponsibilityMatrix } from '../entity/responsibility-matrix.entity';
 import { OrganizationService } from '../services/organization.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Organization, Facility, ResponsibilityMatrix])],
+  imports: [
+    TypeOrmModule.forFeature([Organization, Facility, ResponsibilityMatrix]),
+  ],
   providers: [OrganizationService],
-  exports: [OrganizationService],
+  exports: [OrganizationService, TypeOrmModule],
 })
 export class OrganizationModule {}

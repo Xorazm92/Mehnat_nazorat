@@ -1,16 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Body,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, Query } from '@nestjs/common';
 import { PlanService } from 'src/core/services/plan.service';
-import { AnnualPlan } from 'src/core/entity/annual-plan.entity';
-import { MonthlyPlan } from 'src/core/entity/monthly-plan.entity';
-import { PlanItem } from 'src/core/entity/plan-item.entity';
+import {
+  CreateAnnualPlanDto,
+  ApprovePlanDto,
+  CreateMonthlyPlanDto,
+  CreatePlanItemDto,
+  UpdatePlanItemDto,
+  CompletePlanItemDto,
+} from './dto/plan.dto';
 
 @Controller('api/plans')
 export class PlanController {
@@ -18,8 +15,8 @@ export class PlanController {
 
   // Annual Plan Endpoints
   @Post('annual')
-  async createAnnualPlan(@Body() data: Partial<AnnualPlan>) {
-    return this.planService.createAnnualPlan(data);
+  async createAnnualPlan(@Body() dto: CreateAnnualPlanDto) {
+    return this.planService.createAnnualPlan(dto);
   }
 
   @Get('annual/:id')
@@ -35,9 +32,9 @@ export class PlanController {
   @Put('annual/:id/approve')
   async approveAnnualPlan(
     @Param('id') id: string,
-    @Body('approvedBy') approvedBy: string,
+    @Body() dto: ApprovePlanDto,
   ) {
-    return this.planService.approveAnnualPlan(id, approvedBy);
+    return this.planService.approveAnnualPlan(id, dto.approvedBy);
   }
 
   @Put('annual/:id/reject')
@@ -47,8 +44,11 @@ export class PlanController {
 
   // Monthly Plan Endpoints
   @Post('monthly')
-  async createMonthlyPlan(@Body() data: Partial<MonthlyPlan>) {
-    return this.planService.createMonthlyPlan(data);
+  async createMonthlyPlan(@Body() dto: CreateMonthlyPlanDto) {
+    return this.planService.createMonthlyPlan({
+      ...dto,
+      due_date: dto.due_date ? new Date(dto.due_date) : undefined,
+    });
   }
 
   @Get('monthly/:id')
@@ -77,9 +77,9 @@ export class PlanController {
   @Put('monthly/:id/approve')
   async approveMonthlyPlan(
     @Param('id') id: string,
-    @Body('approvedBy') approvedBy: string,
+    @Body() dto: ApprovePlanDto,
   ) {
-    return this.planService.approveMonthlyPlan(id, approvedBy);
+    return this.planService.approveMonthlyPlan(id, dto.approvedBy);
   }
 
   @Put('monthly/:id/reject')
@@ -94,8 +94,11 @@ export class PlanController {
 
   // Plan Item Endpoints
   @Post('items')
-  async createPlanItem(@Body() data: Partial<PlanItem>) {
-    return this.planService.createPlanItem(data);
+  async createPlanItem(@Body() dto: CreatePlanItemDto) {
+    return this.planService.createPlanItem({
+      ...dto,
+      due_date: new Date(dto.due_date),
+    });
   }
 
   @Get('items/:id')
@@ -113,20 +116,23 @@ export class PlanController {
   @Put('items/:id')
   async updatePlanItem(
     @Param('id') id: string,
-    @Body() data: Partial<PlanItem>,
+    @Body() dto: UpdatePlanItemDto,
   ) {
-    return this.planService.updatePlanItem(id, data);
+    return this.planService.updatePlanItem(id, {
+      ...dto,
+      due_date: dto.due_date ? new Date(dto.due_date) : undefined,
+    });
   }
 
   @Put('items/:id/complete')
   async completePlanItem(
     @Param('id') id: string,
-    @Body() body: { completedBy: string; completionPercentage: number },
+    @Body() dto: CompletePlanItemDto,
   ) {
     return this.planService.completePlanItem(
       id,
-      body.completedBy,
-      body.completionPercentage,
+      dto.completedBy,
+      dto.completionPercentage,
     );
   }
 
@@ -136,9 +142,7 @@ export class PlanController {
   }
 
   @Get('items/nearing-deadline')
-  async getItemsNearingDeadline(
-    @Query('days') days: string = '3',
-  ) {
+  async getItemsNearingDeadline(@Query('days') days: string = '3') {
     return this.planService.getItemsNearingDeadline(Number(days));
   }
 

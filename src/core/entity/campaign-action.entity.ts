@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Campaign } from './campaign.entity';
 import { Task } from './task.entity';
 
@@ -25,16 +31,26 @@ export class CampaignAction {
   @Column({ nullable: true })
   assigned_to: string; // telegram_id
 
-  @Column({ type: 'simple-enum', enum: ['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'], default: 'NOT_STARTED' })
+  @Column({
+    type: 'simple-enum',
+    enum: ['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+    default: 'NOT_STARTED',
+  })
   status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => Campaign, campaign => campaign.actions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Campaign, (campaign) => campaign.actions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'campaign_id' })
   campaign: Campaign;
 

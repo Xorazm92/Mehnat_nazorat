@@ -1,15 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Body,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, Query } from '@nestjs/common';
 import { ComplianceService } from 'src/core/services/compliance.service';
-import { ComplianceItem } from 'src/core/entity/compliance-item.entity';
-import { ComplianceCheck, ComplianceStatus } from 'src/core/entity/compliance-check.entity';
+import {
+  CreateComplianceItemDto,
+  CreateComplianceCheckDto,
+  UpdateComplianceCheckDto,
+  MarkComplianceDto,
+} from './dto/compliance.dto';
 
 @Controller('api/compliance')
 export class ComplianceController {
@@ -17,8 +13,8 @@ export class ComplianceController {
 
   // Compliance Item Endpoints
   @Post('items')
-  async createComplianceItem(@Body() data: Partial<ComplianceItem>) {
-    return this.complianceService.createComplianceItem(data);
+  async createComplianceItem(@Body() dto: CreateComplianceItemDto) {
+    return this.complianceService.createComplianceItem(dto);
   }
 
   @Get('items/:id')
@@ -44,8 +40,8 @@ export class ComplianceController {
 
   // Compliance Check Endpoints
   @Post('checks')
-  async createComplianceCheck(@Body() data: Partial<ComplianceCheck>) {
-    return this.complianceService.createComplianceCheck(data);
+  async createComplianceCheck(@Body() dto: CreateComplianceCheckDto) {
+    return this.complianceService.createComplianceCheck(dto);
   }
 
   @Get('checks/:id')
@@ -70,32 +66,29 @@ export class ComplianceController {
   @Put('checks/:id')
   async updateComplianceCheck(
     @Param('id') id: string,
-    @Body() data: Partial<ComplianceCheck>,
+    @Body() dto: UpdateComplianceCheckDto,
   ) {
-    return this.complianceService.updateComplianceCheck(id, data);
+    return this.complianceService.updateComplianceCheck(id, dto);
   }
 
   @Put('checks/:id/compliant')
-  async markCompliant(
-    @Param('id') id: string,
-    @Body() body: { checkedBy: string; evidenceFileId?: string },
-  ) {
+  async markCompliant(@Param('id') id: string, @Body() dto: MarkComplianceDto) {
     return this.complianceService.markCompliant(
       id,
-      body.checkedBy,
-      body.evidenceFileId,
+      dto.checkedBy,
+      dto.evidenceFileId,
     );
   }
 
   @Put('checks/:id/non-compliant')
   async markNonCompliant(
     @Param('id') id: string,
-    @Body() body: { checkedBy: string; comment: string },
+    @Body() dto: MarkComplianceDto,
   ) {
     return this.complianceService.markNonCompliant(
       id,
-      body.checkedBy,
-      body.comment,
+      dto.checkedBy,
+      dto.comment ?? '',
     );
   }
 

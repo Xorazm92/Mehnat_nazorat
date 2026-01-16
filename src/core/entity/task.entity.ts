@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { TaskPriority, TaskStatus } from 'src/common/enum';
 import { PlanItem } from './plan-item.entity';
 import { ComplianceCheck } from './compliance-check.entity';
@@ -58,14 +65,21 @@ export class Task {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_at: Date;
 
-  @ManyToOne(() => PlanItem, item => item.tasks, { onDelete: 'SET NULL', nullable: true })
+  @ManyToOne(() => PlanItem, (item) => item.tasks, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'plan_item_id' })
   plan_item: PlanItem;
 
-  @OneToMany(() => ComplianceCheck, check => check.task, { cascade: true })
+  @OneToMany(() => ComplianceCheck, (check) => check.task, { cascade: true })
   compliance_checks: ComplianceCheck[];
 
   @Column({ type: 'simple-array', nullable: true })
