@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { OrganizationService } from 'src/core/services/organization.service';
-import { Organization } from 'src/core/entity/organization.entity';
-import { Facility } from 'src/core/entity/facility.entity';
 import { ResponsibilityMatrix } from 'src/core/entity/responsibility-matrix.entity';
 import {
   CreateFacilityDto,
@@ -40,7 +31,10 @@ export class OrganizationController {
   }
 
   @Put(':id')
-  async updateOrganization(@Param('id') id: string, @Body() dto: UpdateOrganizationDto) {
+  async updateOrganization(
+    @Param('id') id: string,
+    @Body() dto: UpdateOrganizationDto,
+  ) {
     return this.organizationService.updateOrganization(id, dto);
   }
 
@@ -77,7 +71,13 @@ export class OrganizationController {
   // Responsibility Matrix Endpoints
   @Post('responsibilities')
   async addResponsible(@Body() dto: CreateResponsibilityDto) {
-    return this.organizationService.addResponsible(dto as ResponsibilityMatrix);
+    const payload: Partial<ResponsibilityMatrix> = {
+      ...dto,
+      effective_from: new Date(dto.effective_from),
+      effective_to: dto.effective_to ? new Date(dto.effective_to) : undefined,
+      status: dto.status ?? 'ACTIVE',
+    };
+    return this.organizationService.addResponsible(payload);
   }
 
   @Get('facilities/:facilityId/responsibilities')
@@ -95,7 +95,14 @@ export class OrganizationController {
     @Param('id') id: string,
     @Body() dto: UpdateResponsibilityDto,
   ) {
-    return this.organizationService.updateResponsibility(id, dto);
+    const payload: Partial<ResponsibilityMatrix> = {
+      ...dto,
+      effective_from: dto.effective_from
+        ? new Date(dto.effective_from)
+        : undefined,
+      effective_to: dto.effective_to ? new Date(dto.effective_to) : undefined,
+    };
+    return this.organizationService.updateResponsibility(id, payload);
   }
 
   @Put('responsibilities/:id/deactivate')

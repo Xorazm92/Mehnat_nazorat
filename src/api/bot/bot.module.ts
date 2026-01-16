@@ -1,7 +1,8 @@
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { TelegrafModule, InjectBot } from 'nestjs-telegraf';
 import { session, Telegraf } from 'telegraf';
-import { config } from 'src/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppConfig } from 'src/config';
 import { BotUpdate } from './bot.update';
 import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
@@ -22,13 +23,15 @@ import { ContextType } from 'src/common/types';
 
 @Module({
   imports: [
+    ConfigModule,
     UserModule,
     AdminModule,
     CoreModule,
     ButtonsModule,
     TelegrafModule.forRootAsync({
-      useFactory: () => ({
-        token: config.BOT_TOKEN,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<AppConfig>) => ({
+        token: configService.get('bot.token', { infer: true }) ?? '',
         middlewares: [session()],
         include: [BotModule, UserModule],
         launchOptions: {
@@ -51,7 +54,7 @@ import { ContextType } from 'src/common/types';
   ],
 })
 export class BotModule implements OnApplicationBootstrap {
-  constructor(@InjectBot() private readonly bot: Telegraf<ContextType>) { }
+  constructor(@InjectBot() private readonly bot: Telegraf<ContextType>) {}
 
   async onApplicationBootstrap() {
     try {

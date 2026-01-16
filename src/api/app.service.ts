@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { config } from 'src/config';
+import { ConfigService } from '@nestjs/config';
+import { AppConfig } from 'src/config';
 
 export class Application {
   static async main(): Promise<void> {
     const app = await NestFactory.create(AppModule);
-    app.listen(config.PORT || 3000);
+    const configService = app.get<ConfigService<AppConfig>>(ConfigService);
+    const port = configService.get('app.port', { infer: true }) ?? 3000;
+    await app.listen(port);
   }
 }
