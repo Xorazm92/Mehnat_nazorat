@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  const port = parseInt(process.env.PORT || '8008', 10);
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
-  console.log('🚀 Application is running on: http://localhost:3000');
+  await app.listen(port);
+  console.log(`🚀 Application is running on: http://localhost:${port}`);
 }
 
 bootstrap().catch((error) => {
