@@ -2,109 +2,78 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Organization } from '../entity/organization.entity';
-import { Facility } from '../entity/facility.entity';
-import { ResponsibilityMatrix } from '../entity/responsibility-matrix.entity';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
-    private organizationRepository: Repository<Organization>,
-    @InjectRepository(Facility)
-    private facilityRepository: Repository<Facility>,
-    @InjectRepository(ResponsibilityMatrix)
-    private responsibilityMatrixRepository: Repository<ResponsibilityMatrix>,
+    private readonly orgRepo: Repository<Organization>,
   ) {}
 
-  // Organization Methods
-  async createOrganization(data: Partial<Organization>): Promise<Organization> {
-    const org = this.organizationRepository.create(data);
-    return this.organizationRepository.save(org);
+  async create(data: Partial<Organization>): Promise<Organization> {
+    const org = this.orgRepo.create(data);
+    return this.orgRepo.save(org);
   }
 
-  async getOrganizationById(id: string): Promise<Organization> {
-    return this.organizationRepository.findOne({
+  async findAll(): Promise<Organization[]> {
+    return this.orgRepo.find({
+      where: { is_active: true },
+      relations: ['assigned_inspector', 'responsible_person'],
+      order: { short_name: 'ASC' },
+    });
+  }
+
+  async findById(id: string): Promise<Organization | null> {
+    return this.orgRepo.findOne({
       where: { id },
-      relations: ['facilities'],
+      relations: ['assigned_inspector', 'responsible_person'],
     });
   }
 
-  async getAllOrganizations(): Promise<Organization[]> {
-    return this.organizationRepository.find({
-      relations: ['facilities'],
+  async findByCode(code: string): Promise<Organization | null> {
+    return this.orgRepo.findOne({
+      where: { code },
+      relations: ['assigned_inspector', 'responsible_person'],
     });
   }
 
-  async updateOrganization(
-    id: string,
-    data: Partial<Organization>,
-  ): Promise<Organization> {
-    await this.organizationRepository.update(id, data);
-    return this.getOrganizationById(id);
-  }
-
-  // Facility Methods
-  async createFacility(data: Partial<Facility>): Promise<Facility> {
-    const facility = this.facilityRepository.create(data);
-    return this.facilityRepository.save(facility);
-  }
-
-  async getFacilityById(id: string): Promise<Facility> {
-    return this.facilityRepository.findOne({
-      where: { id },
-      relations: ['organization', 'responsibility_matrices'],
+  async findByInspector(inspectorId: string): Promise<Organization[]> {
+    return this.orgRepo.find({
+      where: { assigned_inspector_id: inspectorId },
+      order: { short_name: 'ASC' },
     });
   }
 
-  async getFacilitiesByOrganization(orgId: string): Promise<Facility[]> {
-    return this.facilityRepository.find({
-      where: { organization_id: orgId },
-      relations: ['responsibility_matrices'],
+  async assignInspector(
+    orgId: string,
+    inspectorId: string,
+  ): Promise<Organization | null> {
+    await this.orgRepo.update(orgId, {
+      assigned_inspector_id: inspectorId,
     });
+    return this.orgRepo.findOne({ where: { id: orgId } });
   }
 
-  async updateFacility(id: string, data: Partial<Facility>): Promise<Facility> {
-    await this.facilityRepository.update(id, data);
-    return this.getFacilityById(id);
-  }
+  async getStats(): Promise<{
+    total: number;
+    by_type: Record<string, number>;
+    by_inspector: Record<string, number>;
+  }> {
+    const orgs = await this.findAll();
 
-  // Responsibility Matrix Methods
-  async addResponsible(
-    data: Partial<ResponsibilityMatrix>,
-  ): Promise<ResponsibilityMatrix> {
-    const matrix = this.responsibilityMatrixRepository.create(data);
-    return this.responsibilityMatrixRepository.save(matrix);
-  }
-
-  async getResponsibilitiesByFacility(
-    facilityId: string,
-  ): Promise<ResponsibilityMatrix[]> {
-    return this.responsibilityMatrixRepository.find({
-      where: { facility_id: facilityId, status: 'ACTIVE' },
-      relations: ['user', 'facility'],
-    });
-  }
-
-  async getResponsibilitiesByUser(
-    userId: string,
-  ): Promise<ResponsibilityMatrix[]> {
-    return this.responsibilityMatrixRepository.find({
-      where: { user_id: userId, status: 'ACTIVE' },
-      relations: ['facility'],
-    });
-  }
-
-  async updateResponsibility(
-    id: string,
-    data: Partial<ResponsibilityMatrix>,
-  ): Promise<ResponsibilityMatrix> {
-    await this.responsibilityMatrixRepository.update(id, data);
-    return this.responsibilityMatrixRepository.findOne({ where: { id } });
-  }
-
-  async deactivateResponsibility(id: string): Promise<void> {
-    await this.responsibilityMatrixRepository.update(id, {
-      status: 'INACTIVE',
-    });
+    return {
+      total: orgs.length,
+      by_type: orgs.reduce((acc, org) => {
+        acc[org.type] = (acc[org.type] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+      by_inspector: orgs.reduce((acc, org) => {
+        if (org.assigned_inspector_id) {
+          acc[org.assigned_inspector_id] =
+            (acc[org.assigned_inspector_id] || 0) + 1;
+        }
+        return acc;
+      }, {} as Record<string, number>),
+    };
   }
 }

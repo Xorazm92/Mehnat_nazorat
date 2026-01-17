@@ -1,9 +1,19 @@
 import { Markup } from 'telegraf';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 
+type InlineButtonConfig = { text: string; data: string };
+interface DynamicKeyboardOptions {
+  extraRows?: InlineButtonConfig[][];
+  includePrimaryButtons?: boolean;
+}
+
 export const adminMenu: InlineKeyboardMarkup = {
   inline_keyboard: [
     [Markup.button.callback('📋 Foydalanuvchilarni boshqarish', 'manageUsers')],
+    [Markup.button.callback('📝 Hisobotlar', 'reportsOverview')],
+    [Markup.button.callback('⏳ Deadline\'lar', 'deadlinesOverview')],
+    [Markup.button.callback('🏢 Tashkilotlar', 'organizations')],
+    [Markup.button.callback('🔔 Bildirishnomalar', 'notificationsOverview')],
     [Markup.button.callback('📢 Yangiliklar', 'news')],
     [
       Markup.button.callback(
@@ -58,6 +68,113 @@ export const departmentKeys: InlineKeyboardMarkup = {
 
 export const backToDepartments: InlineKeyboardMarkup = {
   inline_keyboard: [[Markup.button.callback('◀️ Ortga', 'backToDepartments')]],
+};
+
+export const organizationKeys = (
+  options?: DynamicKeyboardOptions,
+): InlineKeyboardMarkup => {
+  const includePrimaryButtons =
+    options?.includePrimaryButtons === undefined
+      ? true
+      : options.includePrimaryButtons;
+  const extraRows =
+    options?.extraRows?.map((row) =>
+      row.map((btn) => Markup.button.callback(btn.text, btn.data)),
+    ) ?? [];
+
+  return {
+    inline_keyboard: [
+      ...(includePrimaryButtons
+        ? [[Markup.button.callback('📋 Barcha tashkilotlar', 'listOrganizations')]]
+        : []),
+      ...extraRows,
+      [Markup.button.callback('◀️ Ortga', 'backToAdminMenu')],
+    ],
+  };
+};
+
+interface ReportsKeyboardOptions extends DynamicKeyboardOptions {}
+
+export const reportsKeys = (
+  options?: ReportsKeyboardOptions,
+): InlineKeyboardMarkup => {
+  const includePrimaryButtons =
+    options?.includePrimaryButtons === undefined
+      ? true
+      : options.includePrimaryButtons;
+  const extraRows =
+    options?.extraRows?.map((row) =>
+      row.map((btn) => Markup.button.callback(btn.text, btn.data)),
+    ) ?? [];
+
+  return {
+    inline_keyboard: [
+      ...(includePrimaryButtons
+        ? [
+            [Markup.button.callback('⏳ Pending hisobotlar', 'pendingReports')],
+            [Markup.button.callback('⚠️ Kechikkan hisobotlar', 'overdueReports')],
+          ]
+        : []),
+      ...extraRows,
+      [Markup.button.callback('◀️ Ortga', 'backToAdminMenu')],
+    ],
+  };
+};
+
+export const deadlinesKeys = (
+  options?: DynamicKeyboardOptions,
+): InlineKeyboardMarkup => {
+  const includePrimaryButtons =
+    options?.includePrimaryButtons === undefined
+      ? true
+      : options.includePrimaryButtons;
+  const extraRows =
+    options?.extraRows?.map((row) =>
+      row.map((btn) => Markup.button.callback(btn.text, btn.data)),
+    ) ?? [];
+
+  return {
+    inline_keyboard: [
+      ...(includePrimaryButtons
+        ? [
+            [Markup.button.callback('📅 Yaqin 30 kun', 'upcomingDeadlines')],
+            [Markup.button.callback('⚠️ Kechikkan deadlinelar', 'overdueDeadlines')],
+          ]
+        : []),
+      ...extraRows,
+      [Markup.button.callback('◀️ Ortga', 'backToAdminMenu')],
+    ],
+  };
+};
+
+export const notificationsKeys = (
+  options?: DynamicKeyboardOptions,
+): InlineKeyboardMarkup => {
+  const includePrimaryButtons =
+    options?.includePrimaryButtons === undefined
+      ? true
+      : options.includePrimaryButtons;
+  const extraRows =
+    options?.extraRows?.map((row) =>
+      row.map((btn) => Markup.button.callback(btn.text, btn.data)),
+    ) ?? [];
+
+  return {
+    inline_keyboard: [
+      ...(includePrimaryButtons
+        ? [
+            [
+              Markup.button.callback(
+                '🆕 O\'qilmagan bildirishnomalar',
+                'unreadNotifications',
+              ),
+            ],
+          ]
+        : []),
+      ...extraRows,
+      [Markup.button.callback('◀️ Ortga', 'backToAdminMenu')],
+    ],
+  };
 };
 
 export const sendNewsKeys: InlineKeyboardMarkup = {

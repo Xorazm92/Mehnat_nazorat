@@ -1,14 +1,52 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './api/app.module';
+import { config } from 'src/config';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
 
 async function bootstrap() {
-  const port = parseInt(process.env.PORT || '8008', 10);
-  const app = await NestFactory.create(AppModule);
-  await app.listen(port);
-  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log('Starting application...');
+  try {
+    const app = await NestFactory.create(AppModule, {
+      logger: WinstonModule.createLogger({
+        transports: [
+          new winston.transports.Console({
+            format: winston.format.combine(
+              winston.format.timestamp(),
+              winston.format.ms(),
+              winston.format.colorize(),
+              winston.format.printf(({ timestamp, level, message, ms }) => {
+                return `${timestamp} ${level}: ${message} ${ms}`;
+              }),
+            ),
+          }),
+          new winston.transports.File({
+            filename: 'logs/error.log',
+            level: 'error',
+            format: winston.format.combine(
+              winston.format.timestamp(),
+              winston.format.json(),
+            ),
+          }),
+          new winston.transports.File({
+            filename: 'logs/combined.log',
+            format: winston.format.combine(
+              winston.format.timestamp(),
+              winston.format.json(),
+            ),
+          }),
+        ],
+      }),
+    });
+
+    // Global Exception Filter larni shu yerda qo'shish mumkin
+
+    await app.listen(config.PORT || 3000);
+    console.log(`Application is running on: ${await app.getUrl()}`);
+  } catch (error) {
+    console.error('Fatal Error during startup:', error);
+    process.exit(1);
+  }
 }
 
-bootstrap().catch((error) => {
-  console.error('❌ Failed to start application:', error);
-  process.exit(1);
-});
+bootstrap();

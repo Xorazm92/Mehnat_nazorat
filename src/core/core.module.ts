@@ -1,46 +1,72 @@
 import { Module } from '@nestjs/common';
-import { OrganizationModule } from './modules/organization.module';
-import { PlanModule } from './modules/plan.module';
-import { ComplianceModule } from './modules/compliance.module';
-import { InventoryModule } from './modules/inventory.module';
-import { TaskModule } from './modules/task.module';
-import { SalaryModule } from './modules/salary.module';
-import { CommunicationModule } from './modules/communication.module';
-import { UserModule } from './modules/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Task } from './entity/task.entity';
+import { Report } from './entity/report.entity';
+import { Salary } from './entity/salary.entity';
+import { Statistics } from './entity/statistics.entity';
+import { Message } from './entity/message.entity';
+import { User } from './entity/user.entity';
+import { Appeals } from './entity/appeal.entity';
+import { Department } from './entity/departments.entity';
+import { Organization } from './entity/organization.entity';
+import { ReportSubmission } from './entity/report-submission.entity';
+import { ReportHistory } from './entity/report-history.entity';
+import { Deadline } from './entity/deadline.entity';
+import { Inspection } from './entity/inspection.entity';
+import { Notification } from './entity/notification.entity';
+import { FileArchive } from './entity/file-archive.entity';
+import { TaskService } from './services/task.service';
+import { ReportService } from './services/report.service';
+import { SalaryService } from './services/salary.service';
+import { StatisticsService } from './services/statistics.service';
+import { MessageService } from './services/message.service';
+import { OrganizationService } from './services/organization.service';
+import { ReportSubmissionService } from './services/report-submission.service';
+import { DeadlineService } from './services/deadline.service';
+import { NotificationService } from './services/notification.service';
 
-/**
- * CoreModule - Barcha domain modullarini birlashtiradi
- *
- * Domain modullari:
- * - OrganizationModule: Tashkilotlar, qo'llanuvchilar, mas'ullar
- * - PlanModule: Yillik/oylik rejalar va reja punktlari
- * - ComplianceModule: Normativ talablar va tekshiruvlar
- * - InventoryModule: Inventar va berish loglari
- * - TaskModule: Vazifalar va hisobotlar
- * - SalaryModule: Maoshlar va statistika
- * - CommunicationModule: Xabarlar, murojaatlar, kampaniyalar
- * - UserModule: Foydalanuvchilar va bo'limlar
- */
 @Module({
   imports: [
-    OrganizationModule,
-    PlanModule,
-    ComplianceModule,
-    InventoryModule,
-    TaskModule,
-    SalaryModule,
-    CommunicationModule,
-    UserModule,
+    TypeOrmModule.forFeature([
+      Task,
+      Report,
+      Salary,
+      Statistics,
+      Message,
+      User,
+      Appeals,
+      Department,
+      Organization,
+      ReportSubmission,
+      ReportHistory,
+      Deadline,
+      Inspection,
+      Notification,
+      FileArchive,
+    ]),
+  ],
+  providers: [
+    TaskService,
+    ReportService,
+    SalaryService,
+    StatisticsService,
+    MessageService,
+    OrganizationService,
+    ReportSubmissionService,
+    DeadlineService,
+    NotificationService,
   ],
   exports: [
-    OrganizationModule,
-    PlanModule,
-    ComplianceModule,
-    InventoryModule,
-    TaskModule,
-    SalaryModule,
-    CommunicationModule,
-    UserModule,
+    TaskService,
+    ReportService,
+    SalaryService,
+    StatisticsService,
+    MessageService,
+    OrganizationService,
+    ReportSubmissionService,
+    DeadlineService,
+    NotificationService,
+    TypeOrmModule,
   ],
 })
 export class CoreModule {}
