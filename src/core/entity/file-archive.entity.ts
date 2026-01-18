@@ -51,7 +51,7 @@ export class FileArchive extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   uploaded_at: Date;
 
   @Column({ type: 'tsvector', nullable: true })

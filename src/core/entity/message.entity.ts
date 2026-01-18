@@ -27,10 +27,10 @@ export class Message extends BaseEntity {
   @Column({ default: false })
   is_read: boolean; // O'qilgan
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   sent_at: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   read_at: Date;
 
   @Column({ type: 'text', nullable: true })

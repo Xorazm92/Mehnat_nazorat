@@ -38,12 +38,12 @@ export class Notification extends BaseEntity {
   @Column({ default: false })
   is_read: boolean;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   read_at: Date;
 
   @Column({ type: 'jsonb', nullable: true })
   action_data: any;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   sent_at: Date;
 }

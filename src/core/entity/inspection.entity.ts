@@ -61,7 +61,7 @@ export class Inspection extends BaseEntity {
   @Column({ type: 'int', nullable: true, default: 0 })
   score: number;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   completed_at: Date;
 
   @Column({ type: 'jsonb', nullable: true })

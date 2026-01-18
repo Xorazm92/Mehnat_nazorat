@@ -30,7 +30,7 @@ export class Salary extends BaseEntity {
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   completion_rate: number; // Bajarilish foizi
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   calculated_at: Date;
 
   @Column({ type: 'text', nullable: true })

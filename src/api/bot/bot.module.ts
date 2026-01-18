@@ -1,7 +1,7 @@
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { TelegrafModule, InjectBot } from 'nestjs-telegraf';
 import { session, Telegraf } from 'telegraf';
-import { config } from 'src/config';
 import { BotUpdate } from './bot.update';
 import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
@@ -27,14 +27,16 @@ import { ContextType } from 'src/common/types';
     CoreModule,
     ButtonsModule,
     TelegrafModule.forRootAsync({
-      useFactory: () => ({
-        token: config.BOT_TOKEN,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        token: configService.get<string>('BOT_TOKEN'),
         middlewares: [session()],
         include: [BotModule, UserModule],
         launchOptions: {
           dropPendingUpdates: false,
         },
       }),
+      inject: [ConfigService],
     }),
   ],
   providers: [

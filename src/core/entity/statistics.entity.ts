@@ -10,11 +10,14 @@ export class Statistics extends BaseEntity {
   @Column({ type: 'simple-enum', enum: PeriodType })
   period_type: PeriodType;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz', nullable: true })
   period_start: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz', nullable: true })
   period_end: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  generated_at: Date;
 
   @Column({ type: 'int', default: 0 })
   tasks_assigned: number; // Berilgan vazifalar
@@ -37,6 +40,6 @@ export class Statistics extends BaseEntity {
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   performance_score: number; // Samaradorlik balli (0-100)
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   calculated_at: Date;
 }

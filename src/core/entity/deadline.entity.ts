@@ -39,7 +39,7 @@ export class Deadline extends BaseEntity {
   @Column({ nullable: true })
   assigned_to_id: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   due_date: Date;
 
   @Column({
@@ -62,7 +62,7 @@ export class Deadline extends BaseEntity {
   @Column()
   created_by_id: string;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   completed_at: Date;
 
   @Column({ type: 'jsonb', nullable: true })

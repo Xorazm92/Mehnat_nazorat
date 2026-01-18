@@ -33,10 +33,10 @@ export class Task extends BaseEntity {
   })
   status: TaskStatus;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   deadline: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   completed_at: Date;
 
   @Column({ type: 'simple-array', nullable: true })

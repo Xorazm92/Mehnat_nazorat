@@ -25,7 +25,7 @@ export class ReportHistory extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   comment: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   changed_at: Date;
 
   @Column({ type: 'jsonb', nullable: true })

@@ -60,16 +60,16 @@ export class ReportSubmission extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   parsed_data: any;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   deadline: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   submitted_at: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   reviewed_at: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   approved_at: Date;
 
   @Column({ type: 'text', nullable: true })

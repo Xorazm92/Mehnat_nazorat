@@ -28,14 +28,13 @@ export class Report extends BaseEntity {
   @Column({
     type: 'simple-enum',
     enum: ReportStatus,
-    default: ReportStatus.PENDING,
   })
   status: ReportStatus;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   submitted_at: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   reviewed_at: Date;
 
   @Column({ type: 'text', nullable: true })
